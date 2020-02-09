@@ -1,0 +1,4 @@
+include LICENSE.md
+include README.md
+recursive-include django-analytics/locale *
+recursive-include django-analytics/templates *
