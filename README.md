@@ -3,7 +3,7 @@ __django_analytics is a middleware for Django that tracks visitors.__
 
 ## Installation
 
-1. Run `pip install git+https://github.com/trdwll/django_analytics.git`
+1. Run `pip install git+https://github.com/trdwll/django-analytics.git`
 2. Add `'django_analytics'` to your __INSTALLED_APPS__.
 3. Add `'django_analytics.middleware.PageViewsMiddleware'` to your __MIDDLEWARE__.
 4. Run `python manage.py migrate`.
