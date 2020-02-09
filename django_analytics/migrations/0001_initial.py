@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('page_url', models.URLField(help_text='The url that was accessed.')),
                 ('hit_count', models.PositiveIntegerField(default=0, help_text='The amount of times that the page has been accessed by the visitor.')),
-                ('visitor', models.ForeignKey(help_text='The visitor that has visited this page.', on_delete=django.db.models.deletion.CASCADE, to='analytics.Visitor')),
+                ('visitor', models.ForeignKey(help_text='The visitor that has visited this page.', on_delete=django.db.models.deletion.CASCADE, to='django_analytics.Visitor')),
             ],
         ),
     ]

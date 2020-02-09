@@ -7,7 +7,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('analytics', '0001_initial'),
+        ('django_analytics', '0001_initial'),
     ]
 
     operations = [
