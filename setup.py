@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys
-from django-analytics import __version__, __description__, __license__
+from django_analytics import __version__, __description__, __license__
 
 try:
     from setuptools import setup, find_packages
@@ -8,7 +8,7 @@ except ImportError:
     from distutils.core import setup, find_packages
 
 setup(
-    name='django-analytics',
+    name='django_analytics',
     version=__version__,
     description=__description__,
     long_description=open('./README.md', 'r').read(),
