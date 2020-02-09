@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db.models import Count, Sum, Min, Max
 from django.db.models.functions import Trunc
 from django.db.models import DateTimeField
+from django.utils.safestring import mark_safe
 
 from .models import (
     GlobalPageHit, Visitor, VisitorPageHit,
@@ -45,19 +46,42 @@ class GlobalPageHitAdminSummary(admin.ModelAdmin):
         return response
 
 class GlobalPageHitAdmin(admin.ModelAdmin):
-    list_display = ('page_url', 'hit_count', 'created', 'modified', )
+    change_list_template = 'admin/analytics_change_list.html'
+    list_display = ('get_link', 'hit_count', 'created', 'modified', )
     list_filter = (PageHitFilter, )
     search_fields = ['page_url', 'hit_count', 'created', 'modified']
 
+    def get_link(self, instance):
+        return mark_safe('%(url)s&nbsp;&nbsp;&nbsp;<a href="%(url)s" target="_blank"><i class="fas fa-external-link-alt"></i></a>' % {'url': instance.page_url})
+    get_link.short_description = 'Page URL'
+    get_link.allow_tags = True
+
 class VisitorAdmin(admin.ModelAdmin):
-    list_display = ('created', 'ip_address', 'ip_country', 'last_visit', )
+    change_list_template = 'admin/analytics_change_list.html'
+    list_display = ('created', 'get_ip_address', 'ip_country', 'last_visit', )
+    list_filter = ['ip_country']
     search_fields = ['created', 'ip_address', 'ip_country', 'last_visit']
 
-class VisitorPageHitAdmin(admin.ModelAdmin):
-    list_display = ('page_url', 'visitor', 'hit_count', 'created', )
-    list_filter = (PageHitFilter, )
-    search_fields = ['page_url', 'visitor__ip_address', 'hit_count', 'created']
+    def get_ip_address(self, instance):
+        return mark_safe('<a href="?ip_address=%(ip)s">%(ip)s</a>&nbsp;&nbsp;&nbsp;<a href="https://whatismyipaddress.com/ip/%(ip)s" target="_blank"><i class="fas fa-search"></i></a>' % {'ip': instance.ip_address})
+    get_ip_address.short_description = 'IP Address'
+    get_ip_address.allow_tags = True
 
+class VisitorPageHitAdmin(admin.ModelAdmin):
+    change_list_template = 'admin/analytics_change_list.html'
+    list_display = ('get_link', 'get_ip_address', 'hit_count', 'created', )
+    list_filter = (PageHitFilter, 'visitor__ip_country', )
+    search_fields = ['page_url', 'visitor__ip_address', 'hit_count', 'created', 'user_agent']
+
+    def get_ip_address(self, instance):
+        return mark_safe('<a href="?ip_address=%(ip)s">%(ip)s</a>&nbsp;&nbsp;&nbsp;<a href="https://whatismyipaddress.com/ip/%(ip)s" target="_blank"><i class="fas fa-search"></i></a>' % {'ip': instance.visitor.ip_address})
+    get_ip_address.short_description = 'IP Address'
+    get_ip_address.allow_tags = True
+
+    def get_link(self, instance):
+        return mark_safe('%(url)s&nbsp;&nbsp;&nbsp;<a href="%(url)s" target="_blank"><i class="fas fa-external-link-alt"></i></a>' % {'url': instance.page_url})
+    get_link.short_description = 'Page URL'
+    get_link.allow_tags = True
 
 admin.site.register(GlobalPageHit, GlobalPageHitAdmin)
 admin.site.register(Visitor, VisitorAdmin)

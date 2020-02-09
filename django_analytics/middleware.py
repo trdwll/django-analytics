@@ -30,11 +30,14 @@ class PageViewsMiddleware(object):
                 if details.country_name is not None:
                     visitor.ip_country = details.country_name
             
+            visitor.user_agent = request.META['HTTP_USER_AGENT']
             visitor.save()
 
             # Create the VisitorPageHit
             visitor_page_hit, visitor_page_hit_created = VisitorPageHit.objects.get_or_create(page_url=request.path, visitor=visitor)
             visitor_page_hit.hit_count = F('hit_count') + 1
+            if not request.META['HTTP_USER_AGENT'] in visitor_page_hit.user_agent:
+                visitor_page_hit.user_agent += '\n'+request.META['HTTP_USER_AGENT']
             visitor_page_hit.save() 
 
         return self.get_response(request)
