@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys
-from analytics import __version__, __description__, __license__
+from django-analytics import __version__, __description__, __license__
 
 try:
     from setuptools import setup, find_packages
