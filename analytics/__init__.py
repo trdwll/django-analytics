@@ -1,5 +1,5 @@
 __author__ = 'Russ \'trdwll\' Treadwell <russ@trdwll.com>'
 __copyright__ = 'Copyright (c) Russ \'trdwll\' Treadwell'
 __description__ = 'A middleware that logs visitors of pages.'
-__version__ = '1.0.1'
+__version__ = '1.0.0'
 __license__ = 'MIT License'
