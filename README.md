@@ -1,6 +1,4 @@
 # django-analytics
-
-# django-analytics
 __django-analytics is a middleware for Django that tracks visitors.__
 
 ## Installation
