@@ -5,6 +5,7 @@ from django.conf import settings
 
 from ipware import get_client_ip
 import ipinfo
+import bleach
 
 class PageViewsMiddleware(object):
     def __init__(self, get_response):
