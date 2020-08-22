@@ -14,8 +14,10 @@ class PageViewsMiddleware(object):
         # If the requested url isn't in the admin panel
         if not reverse('admin:index') in request.path or reverse('admin:index') + 'login/' in request.path or request.path == reverse('admin:index'):
             
+            requested_url = bleach.clean(request.path)
+
             # Create the GlobalPageHit
-            page_hit, page_hit_created = GlobalPageHit.objects.get_or_create(page_url=request.path)
+            page_hit, page_hit_created = GlobalPageHit.objects.get_or_create(page_url=requested_url)
             page_hit.hit_count = F('hit_count') + 1
             page_hit.save()
 
@@ -34,7 +36,7 @@ class PageViewsMiddleware(object):
             visitor.save()
 
             # Create the VisitorPageHit
-            visitor_page_hit, visitor_page_hit_created = VisitorPageHit.objects.get_or_create(page_url=request.path, visitor=visitor)
+            visitor_page_hit, visitor_page_hit_created = VisitorPageHit.objects.get_or_create(page_url=requested_url, visitor=visitor)
             visitor_page_hit.hit_count = F('hit_count') + 1
             if not request.META['HTTP_USER_AGENT'] in visitor_page_hit.user_agent:
                 visitor_page_hit.user_agent += '\n'+request.META['HTTP_USER_AGENT']
