@@ -26,15 +26,17 @@ class PageViewsMiddleware(object):
             visitor_ip = get_client_ip(request)
             visitor, visitor_created = Visitor.objects.get_or_create(ip_address=visitor_ip[0]) 
 
-            # if the ip is not localhost then do a lookup of the country for the ip
-            if visitor_ip[0] not in ('localhost', '127.0.0.1'):
-                handler = ipinfo.getHandler(settings.IPINFO_API_KEY)
-                details = handler.getDetails(str(visitor_ip[0]))
-                if details.country_name is not None:
-                    visitor.ip_country = details.country_name
-            
-            visitor.user_agent = request.META['HTTP_USER_AGENT']
-            visitor.save()
+            # if the visitor already exists then we do nothing as it does more api requests for data that you already have
+            if visitor_created:
+                # if the ip is not localhost then do a lookup of the country for the ip
+                if visitor_ip[0] not in ('localhost', '127.0.0.1'):
+                    handler = ipinfo.getHandler(settings.IPINFO_API_KEY)
+                    details = handler.getDetails(str(visitor_ip[0]))
+                    if details.country_name is not None:
+                        visitor.ip_country = details.country_name
+                
+                visitor.user_agent = request.META['HTTP_USER_AGENT']
+                visitor.save()
 
             # Create the VisitorPageHit
             visitor_page_hit, visitor_page_hit_created = VisitorPageHit.objects.get_or_create(page_url=requested_url, visitor=visitor)
